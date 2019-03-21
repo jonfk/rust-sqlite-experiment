@@ -9,7 +9,7 @@ steps:
 
 ---
 kind: pipeline
-name: rusqlite
+name: diesel
 
 steps:
 - name: diesel
