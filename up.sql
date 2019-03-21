@@ -6,4 +6,4 @@ CREATE TABLE IF NOT EXISTS tasks (
 );
 
 PRAGMA journal_mode=WAL;
-PRAGMA busy_timeout=6000;
+PRAGMA busy_timeout=60000;
