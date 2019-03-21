@@ -1,0 +1,18 @@
+kind: pipeline
+name: rusqlite
+
+steps:
+- name: rusqlite
+  image: rustlang/rust:nightly
+  commands:
+    - cd rusqlite && MY_LOG=trace RUST_BACKTRACE=1 cargo run
+
+---
+kind: pipeline
+name: rusqlite
+
+steps:
+- name: diesel
+  image: rustlang/rust:nightly
+  commands:
+    - cd diesel && MY_LOG=trace RUST_BACKTRACE=1 cargo run

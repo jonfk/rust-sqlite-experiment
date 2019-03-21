@@ -4,3 +4,6 @@ CREATE TABLE IF NOT EXISTS tasks (
        status TEXT NOT NULL DEFAULT 'WAITING',
        errors TEXT
 );
+
+PRAGMA journal_mode=WAL;
+PRAGMA busy_timeout=6000;
