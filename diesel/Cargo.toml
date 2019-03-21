@@ -1,0 +1,16 @@
+[package]
+name = "diesel"
+version = "0.1.0"
+authors = ["Jonathan Fok kan <jfokkan@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+diesel = { version = "1.4.0", features = ["sqlite", "r2d2", "chrono", "serde_json", "uuid"] }
+libsqlite3-sys = { version = ">=0.8.0, <0.13.0", features = ["min_sqlite_version_3_7_16", "bundled"] }
+diesel_migrations = "1.4.0"
+r2d2 = "0.8"
+rayon = "1.0.3"
+failure = "0.1.5"
+log = "0.4"
+env_logger = "0.5"
+rand = "0.6.5"
