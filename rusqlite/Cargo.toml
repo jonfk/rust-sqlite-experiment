@@ -1,0 +1,14 @@
+[package]
+name = "rusqlite"
+version = "0.1.0"
+authors = ["Jonathan Fok kan <jfokkan@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+failure = "0.1.5"
+rusqlite = { version = "0.15.0", features = [ "chrono" ] }
+r2d2 = "0.8"
+rayon = "1.0.3"
+log = "0.4"
+env_logger = "0.5"
+rand = "0.6.5"
