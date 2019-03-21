@@ -24,13 +24,13 @@ pub struct TaskRepository {
 
 impl TaskRepository {
     pub fn insert_task(&self, task: &NewTask) -> Result<i32, Error> {
-        let conn = self.conn_pool.get()?;
+        let conn = self.conn_pool.get()?.lock()?;
 
         diesel::insert_into(tasks::table)
             .values(task)
-            .execute(&conn)?;
+            .execute(&*conn)?;
 
-        let inserted_task: Task = tasks::table.order(tasks::id.desc()).first(&conn)?;
+        let inserted_task: Task = tasks::table.order(tasks::id.desc()).first(&*conn)?;
 
         info!("inserted task with id={}", inserted_task.id);
         Ok(inserted_task.id)

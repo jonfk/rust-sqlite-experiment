@@ -27,7 +27,13 @@ fn main() {
     let conn_pool = SqliteConnectionPool::new_from_path("./test_dbs/diesel-sqlite.db")
         .expect("create SqliteConnectionPool");
 
-    run_ddl(&conn_pool.get().expect("get conn for ddl"));
+    run_ddl(
+        &*conn_pool
+            .get()
+            .expect("get conn for ddl")
+            .lock()
+            .expect("lock"),
+    );
 
     let task_repo = TaskRepository {
         conn_pool: conn_pool,

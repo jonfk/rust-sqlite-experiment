@@ -1,20 +1,23 @@
+use diesel::connection::Connection;
 use diesel::r2d2::ConnectionManager;
 use diesel::sqlite::SqliteConnection;
 use failure::Error;
 use r2d2::{Pool, PooledConnection};
+use std::sync::{Arc, Mutex, MutexGuard};
 
-#[derive(Clone)]
-pub struct SqliteConnectionPool(Pool<ConnectionManager<SqliteConnection>>);
+pub struct SqliteConnectionPool {
+    conn: Arc<Mutex<SqliteConnection>>,
+}
 
 impl SqliteConnectionPool {
     pub fn new_from_path(db_path: &str) -> Result<SqliteConnectionPool, Error> {
-        let manager = ConnectionManager::<SqliteConnection>::new(db_path);
-        let pool = r2d2::Pool::builder().build(manager)?;
-        Ok(SqliteConnectionPool(pool))
+        let conn: SqliteConnection = Connection::establish(db_path)?;
+        Ok(SqliteConnectionPool {
+            conn: Arc::new(Mutex::new(conn)),
+        })
     }
 
-    pub fn get(&self) -> Result<PooledConnection<ConnectionManager<SqliteConnection>>, Error> {
-        let conn = self.0.get()?;
-        Ok(conn)
+    pub fn get(&self) -> Result<Arc<Mutex<SqliteConnection>>, Error> {
+        Ok(self.conn)
     }
 }
