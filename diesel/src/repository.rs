@@ -1,5 +1,4 @@
 use crate::connection_pool::SqliteConnectionPool;
-use diesel::prelude::Insertable;
 use diesel::prelude::*;
 use failure::Error;
 use log::info;
@@ -23,17 +22,24 @@ pub struct TaskRepository {
 }
 
 impl TaskRepository {
+    pub fn new(pool: SqliteConnectionPool) -> TaskRepository {
+        TaskRepository { conn_pool: pool }
+    }
+
     pub fn insert_task(&self, task: &NewTask) -> Result<i32, Error> {
         let conn = self.conn_pool.get()?;
 
-        diesel::insert_into(tasks::table)
-            .values(task)
-            .execute(&conn)?;
+        let id = conn.transaction::<_, Error, _>(|| {
+            diesel::insert_into(tasks::table)
+                .values(task)
+                .execute(&conn)?;
 
-        let inserted_task: Task = tasks::table.order(tasks::id.desc()).first(&conn)?;
+            let inserted_task: Task = tasks::table.order(tasks::id.desc()).first(&conn)?;
 
-        info!("inserted task with id={}", inserted_task.id);
-        Ok(inserted_task.id)
+            info!("inserted task with id={}", inserted_task.id);
+            Ok(inserted_task.id)
+        })?;
+        Ok(id)
     }
 
     pub fn query_tasks_by_status(

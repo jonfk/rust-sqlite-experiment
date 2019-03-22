@@ -68,7 +68,8 @@ impl SqliteConnectionPool {
             path,
             OpenFlags::SQLITE_OPEN_READ_WRITE
                 | OpenFlags::SQLITE_OPEN_CREATE
-                | OpenFlags::SQLITE_OPEN_FULL_MUTEX,
+                | OpenFlags::SQLITE_OPEN_FULL_MUTEX
+                | OpenFlags::SQLITE_OPEN_SHARED_CACHE,
         );
         let pool = r2d2::Pool::new(manager)?;
         let mut conn = pool.get()?;

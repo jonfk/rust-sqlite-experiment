@@ -29,9 +29,7 @@ fn main() {
 
     run_ddl(&conn_pool.get().expect("get conn for ddl"));
 
-    let task_repo = TaskRepository {
-        conn_pool: conn_pool,
-    };
+    let task_repo = TaskRepository::new(conn_pool);
 
     for _n in 1..10001 {
         task_repo
